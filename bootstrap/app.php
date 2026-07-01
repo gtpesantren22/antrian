@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        channels: __DIR__.'/../routes/channels.php',
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        // Daftarkan sebagai alias supaya bisa dipakai di routes
+        $middleware->alias([
+            'validasi.sesi'  => \App\Http\Middleware\ValidasiSesi::class,
+            'tipe.meja'      => \App\Http\Middleware\ValidasiTipeMeja::class,
+        ]);
+
+        // Tambahkan cookie encrypt exception untuk 'sesi_token'
+        // supaya nilai cookie bisa dibaca dengan benar
+        $middleware->encryptCookies(except: [
+            'sesi_token',
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->shouldRenderJsonWhen(
+            fn(Request $request) => $request->is('api/*'),
+        );
+    })->create();
