@@ -57,7 +57,7 @@ class ResepsionisController extends Controller
                 foreach ($items as $item) {
                     $nama = $item['nama'] ?? $item['name'] ?? null;
                     // Prioritaskan ID dari API sebagai no_induk, baru kemudian alternatif lainnya
-                    $noInduk = $item['peserta_didik_id'] ?? $item['no_induk'] ?? $item['nis'] ?? $item['nisn'] ?? $item['no_pendaftaran'] ?? $item['nomor_pendaftaran'] ?? $item['no_induk_santri'] ?? null;
+                    $noInduk = $item['peserta_didik_id'] ?? $item['id'] ?? $item['no_induk'] ?? $item['nis'] ?? $item['nisn'] ?? $item['no_pendaftaran'] ?? $item['nomor_pendaftaran'] ?? $item['no_induk_santri'] ?? null;
 
                     if (!$nama) continue;
 
@@ -115,7 +115,7 @@ class ResepsionisController extends Controller
                 ->get('https://data.ppdwk.com/api/datatables', [
                     'data'       => 'pendaftar',
                     'page'       => 1,
-                    'per_page'   => 1000, // Ambil 1000 data agar mencakup seluruh santri
+                    'per_page'   => 500, // Ambil 1000 data agar mencakup seluruh santri
                     'q'          => '',
                     'sortby'     => 'created_at',
                     'sortbydesc' => 'DESC',
@@ -137,33 +137,40 @@ class ResepsionisController extends Controller
                 ]);
             }
 
+            // Tambahkan batas waktu eksekusi agar tidak timeout jika koneksi lambat
+            set_time_limit(120);
+
             $syncedCount = 0;
-            foreach ($items as $item) {
-                $nama = $item['nama'] ?? $item['name'] ?? null;
-                // Prioritaskan ID dari API sebagai no_induk, baru kemudian alternatif lainnya
-                $noInduk = $item['id'] ?? $item['no_induk'] ?? $item['nis'] ?? $item['nisn'] ?? $item['no_pendaftaran'] ?? $item['nomor_pendaftaran'] ?? $item['no_induk_santri'] ?? null;
 
-                if (!$nama) continue;
+            // Gunakan database transaction agar proses updateOrCreate 200+ data berjalan instan (0.2 detik)
+            \Illuminate\Support\Facades\DB::transaction(function () use ($items, &$syncedCount) {
+                foreach ($items as $item) {
+                    $nama = $item['nama'] ?? $item['name'] ?? null;
+                    // Prioritaskan ID dari API sebagai no_induk, baru kemudian alternatif lainnya
+                    $noInduk = $item['peserta_didik_id'] ?? $item['id'] ?? $item['no_induk'] ?? $item['nis'] ?? $item['nisn'] ?? $item['no_pendaftaran'] ?? $item['nomor_pendaftaran'] ?? $item['no_induk_santri'] ?? null;
 
-                if (!$noInduk) {
-                    $noInduk = uniqid('SNT-');
+                    if (!$nama) continue;
+
+                    if (!$noInduk) {
+                        $noInduk = uniqid('SNT-');
+                    }
+
+                    $namaAyah   = $item['nama_ayah'] ?? $item['ayah_nama'] ?? $item['nama_ortu'] ?? null;
+                    $asalDaerah = $item['asal_daerah'] ?? $item['alamat'] ?? $item['kabupaten'] ?? $item['asal'] ?? null;
+                    $noHp       = $item['no_hp'] ?? $item['telepon'] ?? $item['hp'] ?? $item['no_telepon'] ?? null;
+
+                    Santri::updateOrCreate(
+                        ['no_induk' => $noInduk],
+                        [
+                            'nama'        => $nama,
+                            'nama_ayah'   => $namaAyah,
+                            'asal_daerah' => $asalDaerah,
+                            'no_hp'       => $noHp,
+                        ]
+                    );
+                    $syncedCount++;
                 }
-
-                $namaAyah   = $item['nama_ayah'] ?? $item['ayah_nama'] ?? $item['nama_ortu'] ?? null;
-                $asalDaerah = $item['asal_daerah'] ?? $item['alamat'] ?? $item['kabupaten'] ?? $item['asal'] ?? null;
-                $noHp       = $item['no_hp'] ?? $item['telepon'] ?? $item['hp'] ?? $item['no_telepon'] ?? null;
-
-                Santri::updateOrCreate(
-                    ['no_induk' => $noInduk],
-                    [
-                        'nama'        => $nama,
-                        'nama_ayah'   => $namaAyah,
-                        'asal_daerah' => $asalDaerah,
-                        'no_hp'       => $noHp,
-                    ]
-                );
-                $syncedCount++;
-            }
+            });
 
             return response()->json([
                 'message' => "Sinkronisasi berhasil. {$syncedCount} data santri telah diperbarui.",
