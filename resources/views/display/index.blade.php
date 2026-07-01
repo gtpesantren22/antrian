@@ -267,7 +267,7 @@
                     ? `menuju ${namaMeja} untuk pembayaran`
                     : `menuju ${namaMeja}`;
                     
-                const fullText = `Nomor antrean, ${spelledNo}, ${nama}, silakan ${destText}.`;
+                const fullText = `Nomor antrean, ${spelledNo}, ${nama.toLowerCase()}, silakan ${destText}.`;
                 
                 const utterance = new SpeechSynthesisUtterance(fullText);
                 utterance.lang = 'id-ID';

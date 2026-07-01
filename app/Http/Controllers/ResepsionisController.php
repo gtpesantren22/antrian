@@ -22,7 +22,9 @@ class ResepsionisController extends Controller
             ->orderBy('no_antrian')
             ->get();
 
-        return view('resepsionis.index', compact('antriansHariIni'));
+        $totalSantri = Santri::count();
+
+        return view('resepsionis.index', compact('antriansHariIni', 'totalSantri'));
     }
 
     // Cari santri — dipanggil via AJAX saat petugas mengetik nama
@@ -165,6 +167,7 @@ class ResepsionisController extends Controller
 
             return response()->json([
                 'message' => "Sinkronisasi berhasil. {$syncedCount} data santri telah diperbarui.",
+                'total_santri' => Santri::count(),
             ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('API Sync Error: ' . $e->getMessage());

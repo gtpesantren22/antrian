@@ -107,9 +107,7 @@
                                         <span class="text-xs text-slate-500" x-show="antrianAktif.status === 'diproses_layanan'">(sedang diproses)</span>
                                         <span class="text-xs text-slate-500" x-show="antrianAktif.status === 'dipanggil_layanan'">(menunggu santri datang)</span>
                                     </div>
-                                </div>
-
-                                <!-- Action Buttons -->
+                                </di                                <!-- Action Buttons -->
                                 <div class="flex flex-wrap gap-3">
                                     <!-- Re-call TTS Button (Hanya jika status 'dipanggil_layanan') -->
                                     <template x-if="antrianAktif.status === 'dipanggil_layanan'">
@@ -117,28 +115,40 @@
                                                 :disabled="lockAktif || loading"
                                                 :class="lockAktif ? 'bg-slate-800 border-slate-750 text-slate-500 cursor-not-allowed' : 'bg-slate-950 border-slate-800 hover:border-slate-700 text-white cursor-pointer'"
                                                 class="px-5 py-2.5 rounded-xl border font-semibold text-xs transition-all flex items-center gap-1.5">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <svg x-show="loading" class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <svg x-show="!loading" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                                             </svg>
-                                            <span x-text="lockAktif ? 'Suara Sedang Mengantre' : 'Panggil Ulang'">Panggil Ulang</span>
+                                            <span x-text="loading ? 'Memproses...' : (lockAktif ? 'Suara Sedang Mengantre' : 'Panggil Ulang')">Panggil Ulang</span>
                                         </button>
                                     </template>
-
+ 
                                     <!-- Start Processing Button (Hanya jika status 'dipanggil_layanan') -->
                                     <template x-if="antrianAktif.status === 'dipanggil_layanan'">
                                         <button @click="mulaiProses()" 
                                                 :disabled="loading"
-                                                class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/10 transition-all cursor-pointer">
-                                            Mulai Proses
+                                                class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/10 transition-all cursor-pointer flex items-center gap-1.5">
+                                            <svg x-show="loading" class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <span x-text="loading ? 'Memproses...' : 'Mulai Proses'">Mulai Proses</span>
                                         </button>
                                     </template>
-
+ 
                                     <!-- Complete Button (Hanya jika status 'diproses_layanan') -->
                                     <template x-if="antrianAktif.status === 'diproses_layanan'">
                                         <button @click="selesai()" 
                                                 :disabled="loading"
-                                                class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/10 transition-all cursor-pointer">
-                                            Selesai & Arahkan ke Kasir
+                                                class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/10 transition-all cursor-pointer flex items-center gap-1.5">
+                                            <svg x-show="loading" class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <span x-text="loading ? 'Memproses...' : 'Selesai & Arahkan ke Kasir'">Selesai & Arahkan ke Kasir</span>
                                         </button>
                                     </template>
                                 </div>

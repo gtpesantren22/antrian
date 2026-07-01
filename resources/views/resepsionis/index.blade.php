@@ -12,9 +12,13 @@
                 <!-- Header section -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-white">Pendaftaran Antrian Santri</h1>
-                        <p class="text-xs text-slate-400 mt-1">Cari data santri di database untuk memasukkan mereka ke
-                            antrian hari ini.</p>
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl font-bold text-white">Pendaftaran Antrian Santri</h1>
+                            <span class="text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/25 px-2.5 py-0.5 rounded-full" 
+                                  x-text="totalSantri + ' Santri Terdaftar'">
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Cari data santri di database untuk memasukkan mereka ke antrian hari ini.</p>
                     </div>
                     <div>
                         <button @click="syncData()" :disabled="syncing"
@@ -252,6 +256,7 @@
                 syncing: false,
                 santriList: [],
                 antrianList: antrianHariIni,
+                totalSantri: {{ $totalSantri }},
 
                 // Ticket Modal State
                 showTicketModal: false,
@@ -324,6 +329,9 @@
                         const data = await response.json();
 
                         if (response.ok) {
+                            if (data.total_santri !== undefined) {
+                                this.totalSantri = data.total_santri;
+                            }
                             const app = document.querySelector('body').__x?.$data || this.$root?.$data;
                             if (app && typeof app.addToast === 'function') {
                                 app.addToast('Sukses', data.message, 'success');

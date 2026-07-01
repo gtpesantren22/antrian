@@ -30,6 +30,8 @@ return new class extends Migration
             ['nama_meja' => 'Meja Layanan 4',    'tipe' => 'layanan',     'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Pembayaran 1', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Pembayaran 2', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nama_meja' => 'Meja Pembayaran 3', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nama_meja' => 'Meja Pembayaran 4', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 
