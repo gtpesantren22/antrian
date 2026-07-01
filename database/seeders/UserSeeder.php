@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         }
 
         // Kasir
-        $pinKasir = ['3111', '3222'];
+        $pinKasir = ['3111', '3222', '3333', '3444'];
         foreach ($mejaPembayaran as $index => $meja) {
             DB::table('users')->insert([
                 'nama'       => "Petugas {$meja->nama_meja}",

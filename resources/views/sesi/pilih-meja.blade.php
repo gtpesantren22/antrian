@@ -6,7 +6,8 @@
 <div class="flex-1 flex items-center justify-center p-6 bg-radial from-slate-900 to-slate-950" 
      x-data="pilihMejaHandler({{ json_encode($mejas) }})">
      
-    <div class="w-full max-w-lg bg-slate-900/60 border border-slate-800/80 rounded-3xl shadow-2xl backdrop-blur-xl p-8 relative overflow-hidden transition-all duration-300">
+    <div :class="step === 1 ? 'max-w-4xl' : 'max-w-lg'"
+         class="w-full bg-slate-900/60 border border-slate-800/80 rounded-3xl shadow-2xl backdrop-blur-xl p-8 relative overflow-hidden transition-all duration-300">
         
         <!-- Background glows -->
         <div class="absolute -top-40 -right-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -26,7 +27,7 @@
                 <p class="text-slate-400 mt-2 text-sm">Silakan pilih meja operasional Anda hari ini untuk memulai aktivitas.</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[550px] overflow-y-auto pr-1">
                 <template x-for="meja in mejas" :key="meja.id">
                     <button @click="selectMeja(meja)" 
                             :disabled="meja.sedang_ditempati"
