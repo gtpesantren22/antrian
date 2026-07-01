@@ -115,7 +115,7 @@ class ResepsionisController extends Controller
                 ->get('https://data.ppdwk.com/api/datatables', [
                     'data'       => 'pendaftar',
                     'page'       => 1,
-                    'per_page'   => 100, // Ambil 100 data
+                    'per_page'   => 1000, // Ambil 1000 data agar mencakup seluruh santri
                     'q'          => '',
                     'sortby'     => 'created_at',
                     'sortbydesc' => 'DESC',
