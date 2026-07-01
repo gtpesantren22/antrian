@@ -13,14 +13,16 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold text-white">Pendaftaran Antrian Santri</h1>
-                        <p class="text-xs text-slate-400 mt-1">Cari data santri di database untuk memasukkan mereka ke antrian hari ini.</p>
+                        <p class="text-xs text-slate-400 mt-1">Cari data santri di database untuk memasukkan mereka ke
+                            antrian hari ini.</p>
                     </div>
                     <div>
-                        <button @click="syncData()" 
-                                :disabled="syncing"
-                                class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-400 hover:text-indigo-300 font-bold text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                            <svg :class="syncing ? 'animate-spin' : ''" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18.2" />
+                        <button @click="syncData()" :disabled="syncing"
+                            class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-400 hover:text-indigo-300 font-bold text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                            <svg :class="syncing ? 'animate-spin' : ''" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18.2" />
                             </svg>
                             <span x-text="syncing ? 'Sinkronisasi...' : 'Sinkronisasi API'">Sinkronisasi API</span>
                         </button>
@@ -314,12 +316,13 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
                             }
                         });
-                        
+
                         const data = await response.json();
-                        
+
                         if (response.ok) {
                             const app = document.querySelector('body').__x?.$data || this.$root?.$data;
                             if (app && typeof app.addToast === 'function') {
@@ -429,8 +432,8 @@
                 async mockPrint() {
                     if (!this.activeTicket) return;
 
-                    // Tentukan nama printer thermal yang terpasang di PC lokal petugas
-                    const printerName = "POS-58"; // Ganti dengan nama printer asli di Windows/macOS
+                    // Tentukan nama printer thermal dari .env
+                    const printerName = "{{ env('PRINTER_NAME', 'BP-LITE 80L') }}";
 
                     try {
                         // 1. Hubungkan ke aplikasi QZ Tray lokal
@@ -441,24 +444,24 @@
                         // 2. Set konfigurasi printer (lebar kertas disesuaikan)
                         const config = qz.configs.create(printerName, {
                             size: {
-                                width: 58
-                            }, // Lebar kertas thermal 58mm
+                                width: 80
+                            }, // Lebar kertas thermal 80mm
                             units: 'mm',
                             margins: 0
                         });
 
                         // 3. Siapkan HTML Struk (Template yang sama dengan print browser sebelumnya)
                         const ticketHtml = `
-                        <div style="font-family: 'Courier New', monospace; text-align: center; font-size: 11px; width: 100%;">
-                            <h3 style="margin: 0; font-size: 13px;">ANTRIAN SANTRI</h3>
-                            <div style="font-size: 10px;">PENDAFTARAN SANTRI BARU</div>
+                        <div style="font-family: 'Courier New', monospace; text-align: center; font-size: 12px; width: 100%;">
+                            <h3 style="margin: 0; font-size: 14px;">ANTRIAN SANTRI</h3>
+                            <div style="font-size: 11px;">PENDAFTARAN SANTRI BARU 2026/2027</div>
+                            <div style="font-size: 11px;">PP Darul Lughah Wal Karomah</div>
                             <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
-                            <div style="font-size: 9px; uppercase">Nomor Antrian Anda</div>
-                            <div style="font-size: 38px; font-weight: bold; margin: 3px 0;">${this.activeTicket.no_antrian}</div>
+                            <div style="font-size: 10px; uppercase">Nomor Antrian Anda</div>
+                            <div style="font-size: 42px; font-weight: bold; margin: 3px 0;">${this.activeTicket.no_antrian}</div>
                             <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
-                            <table style="width: 100%; font-size: 9px; text-align: left;">
-                                <tr><td>Nama:</td><td style="font-weight: bold;">${this.activeTicket.nama}</td></tr>
-                                <tr><td>NIS:</td><td>${this.activeTicket.no_induk}</td></tr>
+                            <table style="width: 100%; font-size: 14px; text-align: left; margin: 0 auto;">
+                                <tr><td style="width: 45px;">Nama:</td><td style="font-weight: bold;">${this.activeTicket.nama}</td></tr>
                                 <tr><td>Tgl:</td><td>${this.activeTicket.tanggal}</td></tr>
                                 <tr><td>Jam:</td><td>${this.activeTicket.waktu} WIB</td></tr>
                             </table>

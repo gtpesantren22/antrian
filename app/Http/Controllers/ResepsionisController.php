@@ -32,7 +32,7 @@ class ResepsionisController extends Controller
             'keyword' => 'required|min:2',
         ]);
 
-        $token = env('PPDWK_API_TOKEN');
+        $token = config('services.ppdwk.token');
 
         try {
             // Panggil API external dengan parameter keyword
@@ -105,7 +105,7 @@ class ResepsionisController extends Controller
     // Sinkronisasi data santri secara massal dari API external
     public function syncSantri(Request $request)
     {
-        $token = env('PPDWK_API_TOKEN');
+        $token = config('services.ppdwk.token');
 
         try {
             $response = Http::withToken($token)

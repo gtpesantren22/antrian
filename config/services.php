@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ppdwk' => [
+        'token' => env('PPDWK_API_TOKEN'),
+    ],
+
 ];
