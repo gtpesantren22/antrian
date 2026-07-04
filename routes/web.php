@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SesiController::class, 'index'])->name('pilih.meja');
 Route::post('/login', [SesiController::class, 'login'])->name('sesi.login');
 Route::post('/logout', [SesiController::class, 'logout'])->name('sesi.logout');
+Route::post('/meja/reset', [SesiController::class, 'resetMeja'])->name('sesi.resetMeja');
 
 // Display antrian (layar TV) — bebas akses
 Route::get('/display', [DisplayController::class, 'index'])->name('display');

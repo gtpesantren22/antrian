@@ -63,5 +63,15 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+        // Akun khusus Admin untuk mereset meja/sesi aktif
+        DB::table('users')->insert([
+            'nama'       => 'Admin',
+            'pin'        => Hash::make('3343'), // PIN khusus admin
+            'meja_id'    => null,
+            'is_active'  => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

@@ -251,6 +251,11 @@
                             }
                         });
                 }
+
+                // Auto-sync status every 5 seconds to heal any stuck/missed lock states
+                setInterval(() => {
+                    this.fetchStatus();
+                }, 5000);
             },
             
             async fetchStatus() {

@@ -64,6 +64,42 @@ class SesiController extends Controller
             ->with('success', 'Sesi berhasil diakhiri.');
     }
 
+    // Reset meja/sesi aktif oleh Admin
+    public function resetMeja(Request $request)
+    {
+        $request->validate([
+            'meja_id' => 'required|exists:meja,id',
+            'pin'     => 'required|digits:4',
+        ]);
+
+        // Cari user admin (meja_id is null dan nama 'Admin')
+        $admin = \App\Models\User::whereNull('meja_id')
+            ->where('nama', 'Admin')
+            ->where('is_active', true)
+            ->first();
+
+        if (!$admin || !\Hash::check($request->pin, $admin->pin)) {
+            return response()->json([
+                'message' => 'PIN Admin tidak valid.',
+            ], 422);
+        }
+
+        $meja = Meja::findOrFail($request->meja_id);
+
+        if ($meja->isSedangDitempati()) {
+            // Terminasi sesi aktif (set expired_at ke waktu sekarang)
+            $meja->sesiAktif()->update(['expired_at' => now()]);
+            
+            return response()->json([
+                'message' => "Sesi {$meja->nama_meja} berhasil di-reset.",
+            ]);
+        }
+
+        return response()->json([
+            'message' => "Meja {$meja->nama_meja} tidak sedang ditempati.",
+        ]);
+    }
+
     private function redirectByTipe(string $tipe): string
     {
         return match ($tipe) {
