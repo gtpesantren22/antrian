@@ -188,9 +188,10 @@
                 const antrian = item || this.mainAntrian;
                 if (!antrian) return '';
                 
-                // Check if called from payment or services
-                if (antrian.status === 'dipanggil_pembayaran') {
+                if (antrian.status.includes('pembayaran')) {
                     return antrian.meja_pembayaran?.nama_meja || 'Meja Pembayaran';
+                } else if (antrian.status.includes('kesehatan')) {
+                    return antrian.meja_kesehatan?.nama_meja || 'Meja Kesehatan';
                 }
                 return antrian.meja_layanan?.nama_meja || 'Meja Layanan';
             },
@@ -205,8 +206,9 @@
                 // Set active models
                 this.mainAntrian = {
                     ...antrian,
-                    meja_layanan: antrian.status !== 'dipanggil_pembayaran' ? meja : null,
-                    meja_pembayaran: antrian.status === 'dipanggil_pembayaran' ? meja : null
+                    meja_layanan: antrian.status.includes('layanan') ? meja : (antrian.meja_layanan || null),
+                    meja_kesehatan: antrian.status.includes('kesehatan') ? meja : (antrian.meja_kesehatan || null),
+                    meja_pembayaran: antrian.status.includes('pembayaran') ? meja : (antrian.meja_pembayaran || null)
                 };
                 
                 this.isCallingNow = true;
@@ -263,11 +265,17 @@
                 }
                 
                 // Destination prefix
-                const destText = namaMeja.toLowerCase().includes('pembayaran') || namaMeja.toLowerCase().includes('kasir')
-                    ? `menuju ${namaMeja} untuk pembayaran`
-                    : `menuju ${namaMeja}`;
-                    
-                const fullText = `Nomor antrean, ${spelledNo}, ${nama.toLowerCase()}, silakan ${destText}.`;
+                const nameLower = namaMeja.toLowerCase();
+                const isKesehatanOrPembayaran = nameLower.includes('kesehatan') || nameLower.includes('sehat') || nameLower.includes('pembayaran') || nameLower.includes('kasir');
+
+                let fullText;
+                if (isKesehatanOrPembayaran) {
+                    // Format ringkas: hanya nomor antrean dan meja tujuan
+                    fullText = `Nomor antrian, ${spelledNo}, silakan menuju ${namaMeja}.`;
+                } else {
+                    // Format lengkap untuk Layanan (menyebutkan nama santri)
+                    fullText = `Nomor antrian, ${spelledNo}, ${nama.toLowerCase()}, silakan menuju ${namaMeja}.`;
+                }
                 
                 const utterance = new SpeechSynthesisUtterance(fullText);
                 utterance.lang = 'id-ID';

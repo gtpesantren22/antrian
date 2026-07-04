@@ -440,8 +440,8 @@
                 async mockPrint() {
                     if (!this.activeTicket) return;
 
-                    // Tentukan nama printer thermal dari .env
-                    const printerName = "{{ env('PRINTER_NAME', 'BP-LITE 80L') }}";
+                    // Tentukan nama printer thermal dari config (agar aman saat config:cache)
+                    const printerName = "{{ config('services.printer.name', 'BP-LITE 80L') }}";
 
                     try {
                         // 1. Hubungkan ke aplikasi QZ Tray lokal
@@ -452,8 +452,8 @@
                         // 2. Set konfigurasi printer (lebar kertas disesuaikan)
                         const config = qz.configs.create(printerName, {
                             size: {
-                                width: 80
-                            }, // Lebar kertas thermal 80mm
+                                width: 58
+                            }, // Lebar kertas thermal 58mm
                             units: 'mm',
                             margins: 0
                         });
@@ -503,59 +503,75 @@
                 },
 
 
-                // Helper Styles
-                getStatusBorder(status) {
-                    switch (status) {
-                        case 'menunggu':
-                            return 'border-indigo-800/40 hover:border-indigo-700/60';
-                        case 'dipanggil_layanan':
-                        case 'diproses_layanan':
-                        case 'dipanggil_pembayaran':
-                            return 'border-emerald-800/40 hover:border-emerald-700/60';
-                        case 'menunggu_pembayaran':
-                            return 'border-amber-800/40 hover:border-amber-700/60';
-                        default:
-                            return 'border-slate-800/40 hover:border-slate-700/60';
-                    }
-                },
-
-                getStatusBadge(status) {
-                    switch (status) {
-                        case 'menunggu':
-                            return 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20';
-                        case 'dipanggil_layanan':
-                            return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 animate-pulse';
-                        case 'diproses_layanan':
-                            return 'bg-teal-500/10 text-teal-400 border border-teal-500/20';
-                        case 'menunggu_pembayaran':
-                            return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
-                        case 'dipanggil_pembayaran':
-                            return 'bg-amber-500/15 text-amber-400 border border-amber-500/20 animate-pulse';
-                        case 'selesai':
-                            return 'bg-slate-800 text-slate-400 border border-slate-750';
-                        default:
-                            return 'bg-slate-900 text-slate-500 border border-slate-950';
-                    }
-                },
-
-                getStatusLabel(status) {
-                    switch (status) {
-                        case 'menunggu':
-                            return 'Menunggu';
-                        case 'dipanggil_layanan':
-                            return 'Dipanggil';
-                        case 'diproses_layanan':
-                            return 'Diproses';
-                        case 'menunggu_pembayaran':
-                            return 'Ke Kasir';
-                        case 'dipanggil_pembayaran':
-                            return 'Dipanggil Kasir';
-                        case 'selesai':
-                            return 'Selesai';
-                        default:
-                            return status;
-                    }
-                },
+                 // Helper Styles
+                 getStatusBorder(status) {
+                     switch (status) {
+                         case 'menunggu':
+                             return 'border-indigo-800/40 hover:border-indigo-700/60';
+                         case 'dipanggil_layanan':
+                         case 'diproses_layanan':
+                         case 'dipanggil_kesehatan':
+                         case 'diproses_kesehatan':
+                         case 'dipanggil_pembayaran':
+                             return 'border-emerald-800/40 hover:border-emerald-700/60';
+                         case 'menunggu_kesehatan':
+                             return 'border-teal-800/40 hover:border-teal-700/60';
+                         case 'menunggu_pembayaran':
+                             return 'border-amber-800/40 hover:border-amber-700/60';
+                         default:
+                             return 'border-slate-800/40 hover:border-slate-700/60';
+                     }
+                 },
+ 
+                 getStatusBadge(status) {
+                     switch (status) {
+                         case 'menunggu':
+                             return 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20';
+                         case 'dipanggil_layanan':
+                             return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 animate-pulse';
+                         case 'diproses_layanan':
+                             return 'bg-teal-500/10 text-teal-400 border border-teal-500/20';
+                         case 'menunggu_kesehatan':
+                             return 'bg-teal-500/10 text-teal-400 border border-teal-500/20';
+                         case 'dipanggil_kesehatan':
+                             return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 animate-pulse';
+                         case 'diproses_kesehatan':
+                             return 'bg-teal-500/15 text-teal-300 border border-teal-500/25';
+                         case 'menunggu_pembayaran':
+                             return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+                         case 'dipanggil_pembayaran':
+                             return 'bg-amber-500/15 text-amber-400 border border-amber-500/20 animate-pulse';
+                         case 'selesai':
+                             return 'bg-slate-800 text-slate-400 border border-slate-750';
+                         default:
+                             return 'bg-slate-900 text-slate-500 border border-slate-950';
+                     }
+                 },
+ 
+                 getStatusLabel(status) {
+                     switch (status) {
+                         case 'menunggu':
+                             return 'Menunggu';
+                         case 'dipanggil_layanan':
+                             return 'Dipanggil';
+                         case 'diproses_layanan':
+                             return 'Diproses';
+                         case 'menunggu_kesehatan':
+                             return 'Ke Kesehatan';
+                         case 'dipanggil_kesehatan':
+                             return 'Dipanggil Sehat';
+                         case 'diproses_kesehatan':
+                             return 'Diperiksa';
+                         case 'menunggu_pembayaran':
+                             return 'Ke Kasir';
+                         case 'dipanggil_pembayaran':
+                             return 'Dipanggil Kasir';
+                         case 'selesai':
+                             return 'Selesai';
+                         default:
+                             return status;
+                     }
+                 },
 
                 formatWaktu(dateStr) {
                     if (!dateStr) return '';

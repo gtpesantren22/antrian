@@ -13,12 +13,17 @@ class Antrian extends Model
         'status',
         'meja_layanan_id',
         'dipanggil_oleh_layanan_id',
+        'meja_kesehatan_id',
+        'dipanggil_oleh_kesehatan_id',
         'meja_pembayaran_id',
         'dipanggil_oleh_kasir_id',
         'waktu_daftar',
         'waktu_dipanggil_layanan',
         'waktu_mulai_layanan',
         'waktu_selesai_layanan',
+        'waktu_dipanggil_kesehatan',
+        'waktu_mulai_kesehatan',
+        'waktu_selesai_kesehatan',
         'waktu_dipanggil_pembayaran',
         'waktu_selesai_pembayaran',
     ];
@@ -29,6 +34,9 @@ class Antrian extends Model
         'waktu_dipanggil_layanan'    => 'datetime',
         'waktu_mulai_layanan'        => 'datetime',
         'waktu_selesai_layanan'      => 'datetime',
+        'waktu_dipanggil_kesehatan'  => 'datetime',
+        'waktu_mulai_kesehatan'      => 'datetime',
+        'waktu_selesai_kesehatan'    => 'datetime',
         'waktu_dipanggil_pembayaran' => 'datetime',
         'waktu_selesai_pembayaran'   => 'datetime',
     ];
@@ -56,6 +64,11 @@ class Antrian extends Model
         return $this->belongsTo(Meja::class, 'meja_layanan_id');
     }
 
+    public function mejaKesehatan()
+    {
+        return $this->belongsTo(Meja::class, 'meja_kesehatan_id');
+    }
+
     public function mejaPembayaran()
     {
         return $this->belongsTo(Meja::class, 'meja_pembayaran_id');
@@ -64,6 +77,11 @@ class Antrian extends Model
     public function dipanggilOlehLayanan()
     {
         return $this->belongsTo(User::class, 'dipanggil_oleh_layanan_id');
+    }
+
+    public function dipanggilOlehKesehatan()
+    {
+        return $this->belongsTo(User::class, 'dipanggil_oleh_kesehatan_id');
     }
 
     public function dipanggilOlehKasir()
@@ -86,6 +104,11 @@ class Antrian extends Model
     public function scopeMenunggu($query)
     {
         return $query->where('status', 'menunggu');
+    }
+
+    public function scopeMenungguKesehatan($query)
+    {
+        return $query->where('status', 'menunggu_kesehatan');
     }
 
     public function scopeMenungguPembayaran($query)

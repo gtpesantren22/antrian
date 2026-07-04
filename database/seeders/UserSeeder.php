@@ -10,9 +10,9 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ambil ID meja dari tabel meja
         $mejaResepsionis = DB::table('meja')->where('tipe', 'resepsionis')->first();
         $mejaLayanan     = DB::table('meja')->where('tipe', 'layanan')->get();
+        $mejaKesehatan   = DB::table('meja')->where('tipe', 'kesehatan')->get();
         $mejaPembayaran  = DB::table('meja')->where('tipe', 'pembayaran')->get();
 
         // Resepsionis
@@ -31,6 +31,19 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 'nama'       => "Petugas {$meja->nama_meja}",
                 'pin'        => Hash::make($pinLayanan[$index]),
+                'meja_id'    => $meja->id,
+                'is_active'  => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // 2 Petugas Kesehatan
+        $pinKesehatan = ['4111', '4222'];
+        foreach ($mejaKesehatan as $index => $meja) {
+            DB::table('users')->insert([
+                'nama'       => "Petugas {$meja->nama_meja}",
+                'pin'        => Hash::make($pinKesehatan[$index]),
                 'meja_id'    => $meja->id,
                 'is_active'  => true,
                 'created_at' => now(),

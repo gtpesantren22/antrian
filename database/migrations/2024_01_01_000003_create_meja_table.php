@@ -15,6 +15,7 @@ return new class extends Migration
             $table->enum('tipe', [
                 'resepsionis',
                 'layanan',
+                'kesehatan',
                 'pembayaran',
             ]);
             $table->boolean('is_active')->default(true);
@@ -28,6 +29,8 @@ return new class extends Migration
             ['nama_meja' => 'Meja Layanan 2',    'tipe' => 'layanan',     'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Layanan 3',    'tipe' => 'layanan',     'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Layanan 4',    'tipe' => 'layanan',     'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nama_meja' => 'Meja Kesehatan 1',  'tipe' => 'kesehatan',   'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nama_meja' => 'Meja Kesehatan 2',  'tipe' => 'kesehatan',   'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Pembayaran 1', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Pembayaran 2', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nama_meja' => 'Meja Pembayaran 3', 'tipe' => 'pembayaran',  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],

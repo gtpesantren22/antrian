@@ -11,8 +11,8 @@ class DisplayController extends Controller
     {
         // Antrian yang baru saja dipanggil (untuk ditampilkan di layar)
         $terakhirDipanggil = Antrian::hariIni()
-            ->whereIn('status', ['dipanggil_layanan', 'diproses_layanan', 'dipanggil_pembayaran'])
-            ->with(['santri', 'mejaLayanan', 'mejaPembayaran'])
+            ->whereIn('status', ['dipanggil_layanan', 'diproses_layanan', 'dipanggil_kesehatan', 'diproses_kesehatan', 'dipanggil_pembayaran'])
+            ->with(['santri', 'mejaLayanan', 'mejaKesehatan', 'mejaPembayaran'])
             ->orderBy('updated_at', 'desc')
             ->limit(5)
             ->get();

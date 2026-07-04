@@ -52,15 +52,30 @@ class AntrianService
     }
 
     /**
+     * Ambil antrian berikutnya untuk meja kesehatan.
+     * Urutan berdasarkan waktu_selesai_layanan (siapa lebih dulu selesai layanan).
+     */
+    public function ambilAntrianKesehatan(): ?Antrian
+    {
+        return DB::transaction(function () {
+            return Antrian::whereDate('tanggal', today())
+                ->where('status', 'menunggu_kesehatan')
+                ->orderBy('waktu_selesai_layanan', 'asc')
+                ->lockForUpdate()
+                ->first();
+        });
+    }
+
+    /**
      * Ambil antrian berikutnya untuk meja pembayaran.
-     * Urutan berdasarkan waktu_selesai_layanan (siapa lebih dulu selesai administrasi).
+     * Urutan berdasarkan waktu_selesai_kesehatan (siapa lebih dulu selesai kesehatan).
      */
     public function ambilAntrianPembayaran(): ?Antrian
     {
         return DB::transaction(function () {
             return Antrian::whereDate('tanggal', today())
                 ->where('status', 'menunggu_pembayaran')
-                ->orderBy('waktu_selesai_layanan', 'asc')
+                ->orderBy('waktu_selesai_kesehatan', 'asc')
                 ->lockForUpdate()
                 ->first();
         });

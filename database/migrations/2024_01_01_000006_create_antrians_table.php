@@ -42,6 +42,9 @@ return new class extends Migration
                 'menunggu',
                 'dipanggil_layanan',
                 'diproses_layanan',
+                'menunggu_kesehatan',
+                'dipanggil_kesehatan',
+                'diproses_kesehatan',
                 'menunggu_pembayaran',
                 'dipanggil_pembayaran',
                 'selesai',
@@ -57,6 +60,18 @@ return new class extends Migration
 
             // Petugas yang melakukan pemanggilan layanan
             $table->foreignId('dipanggil_oleh_layanan_id')
+                  ->nullable()
+                  ->constrained('users')
+                  ->nullOnDelete();
+
+            // Meja kesehatan yang menangani (diisi saat dipanggil_kesehatan)
+            $table->foreignId('meja_kesehatan_id')
+                  ->nullable()
+                  ->constrained('meja')
+                  ->nullOnDelete();
+
+            // Petugas kesehatan yang melakukan pemanggilan kesehatan
+            $table->foreignId('dipanggil_oleh_kesehatan_id')
                   ->nullable()
                   ->constrained('users')
                   ->nullOnDelete();
@@ -83,9 +98,19 @@ return new class extends Migration
             // Saat petugas layanan klik "mulai proses"
             $table->timestamp('waktu_mulai_layanan')->nullable();
 
-            // Saat petugas layanan klik "selesai" → masuk pool pembayaran
-            // INI kunci urutan antrian pembayaran (ORDER BY kolom ini ASC)
+            // Saat petugas layanan klik "selesai" → masuk pool kesehatan
+            // INI kunci urutan antrian kesehatan (ORDER BY kolom ini ASC)
             $table->timestamp('waktu_selesai_layanan')->nullable();
+
+            // Saat petugas kesehatan klik "panggil"
+            $table->timestamp('waktu_dipanggil_kesehatan')->nullable();
+
+            // Saat petugas kesehatan klik "mulai proses"
+            $table->timestamp('waktu_mulai_kesehatan')->nullable();
+
+            // Saat petugas kesehatan klik "selesai" → masuk pool pembayaran
+            // INI kunci urutan antrian pembayaran (ORDER BY kolom ini ASC)
+            $table->timestamp('waktu_selesai_kesehatan')->nullable();
 
             // Saat kasir klik "panggil"
             $table->timestamp('waktu_dipanggil_pembayaran')->nullable();

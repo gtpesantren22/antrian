@@ -39,4 +39,8 @@ return [
         'token' => env('PPDWK_API_TOKEN'),
     ],
 
+    'printer' => [
+        'name' => env('PRINTER_NAME', 'POS-58'),
+    ],
+
 ];

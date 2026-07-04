@@ -3,6 +3,7 @@
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\KesehatanController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ResepsionisController;
 use App\Http\Controllers\SesiController;
@@ -41,6 +42,18 @@ Route::middleware('validasi.sesi')->group(function () {
             Route::post('/panggil/{antrian}', [LayananController::class, 'panggilAntrian'])->name('panggil');
             Route::post('/mulai/{antrian}', [LayananController::class, 'mulaiProses'])->name('mulai');
             Route::post('/selesai/{antrian}', [LayananController::class, 'selesai'])->name('selesai');
+        });
+
+    // Kesehatan
+    Route::middleware('tipe.meja:kesehatan')
+        ->prefix('kesehatan')
+        ->name('kesehatan.')
+        ->group(function () {
+            Route::get('/', [KesehatanController::class, 'index'])->name('index');
+            Route::post('/ambil-antrian', [KesehatanController::class, 'ambilAntrian'])->name('ambil');
+            Route::post('/panggil/{antrian}', [KesehatanController::class, 'panggilAntrian'])->name('panggil');
+            Route::post('/mulai/{antrian}', [KesehatanController::class, 'mulaiProses'])->name('mulai');
+            Route::post('/selesai/{antrian}', [KesehatanController::class, 'selesai'])->name('selesai');
         });
 
     // Pembayaran

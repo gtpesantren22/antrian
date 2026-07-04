@@ -69,6 +69,7 @@ class SesiController extends Controller
         return match ($tipe) {
             'resepsionis' => route('resepsionis.index'),
             'layanan'     => route('layanan.index'),
+            'kesehatan'   => route('kesehatan.index'),
             'pembayaran'  => route('pembayaran.index'),
             default       => route('pilih.meja'),
         };

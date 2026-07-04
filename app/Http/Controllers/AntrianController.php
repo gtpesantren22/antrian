@@ -27,6 +27,7 @@ class AntrianController extends Controller
     {
         return response()->json([
             'menunggu'            => Antrian::hariIni()->menunggu()->count(),
+            'menunggu_kesehatan'  => Antrian::hariIni()->menungguKesehatan()->count(),
             'menunggu_pembayaran' => Antrian::hariIni()->menungguPembayaran()->count(),
             'selesai'             => Antrian::hariIni()->where('status', 'selesai')->count(),
             'lock_aktif'          => app(AntrianService::class)->isLockAktif(),
