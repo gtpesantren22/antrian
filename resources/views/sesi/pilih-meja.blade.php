@@ -243,7 +243,7 @@
                     if (this.pin.length === 4) {
                         // Kirim request reset meja via AJAX
                         try {
-                            const response = await fetch('/meja/reset', {
+                            const response = await fetch("{{ route('sesi.resetMeja') }}", {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
